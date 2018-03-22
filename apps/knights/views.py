@@ -37,11 +37,7 @@ def matching(request):
     # Create a match
     print request.POST.get('player1'), "<=== player1"
     print request.POST.get('player2'), "<=== player2"
-    # fat = True
-    # fitness = ("skinny", "fat")[fat]
-    # print "Ali is", fitness
-    # # Output: Ali is fat
-
+ 
     # Validation for creating new object
     errors = Match.objects.create_validator(request.POST)
     if len(errors) > 0:
@@ -52,8 +48,14 @@ def matching(request):
     player1 = Knight.objects.get(id = request.POST.get('player1'))
     player2 = Knight.objects.get(id = request.POST.get('player2'))
 
-    winner = (player1, player2)[randint(1,2) == 1]
-    match = Match(player1 = player1, player2 = player2, winner = winner)
+    if randint(1,2) == 1:
+        winner = player1
+        loser = player2
+    else:
+        winner = player2
+        loser = player1
+
+    match = Match(winner = winner, loser = loser)
     match.save()
     
     return redirect('/')
@@ -62,15 +64,8 @@ def showknight(request, id):
     knight = Knight.objects.get(id=id)
     context = {
         'knight': knight,
-        'losses': knight.count_losses(),
-        'matches': Match.objects.filter(Q(player1=knight) | Q(player2=knight)).order_by('-created_at')
+        'matches': Match.objects.filter(Q(winner=knight) | Q(loser=knight)).order_by('-created_at'),
     }
+    
     return render(request, 'knights/showknight.html', context)
 
-def count_losses(kinghtself):
-    wins = kinghtself.winner_matches.count()
-    match1 = kinghtself.player1_matches.count()
-    match2 = kinghtself.player2_matches.count()
-    losses = match1 + match2 - wins
-    
-    return losses

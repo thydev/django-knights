@@ -92,12 +92,8 @@
                     <td class="text-nowrap">
                         <a href="/knight/{{match.winner.id}}">{{ match.winner.name }}</a></td>
                     <td class="text-nowrap">
-                        {% if match.winner.name == match.player1.name %}
-                        <a href="/knight/{{match.player2.id}}">{{ match.player2.name }}</a>
-                        {% else %}  
-                        <a href="/knight/{{match.player1.id}}">{{ match.player1.name }}</a>
-                        {% endif %}
-                    </td>
+                        <a href="/knight/{{match.loser.id}}">{{ match.loser.name }}</a></td>
+                    
                     <td class="text-nowrap cdate">{{ match.created_at|date:"M dS, Y" }}</td>
                 </tr>
                 {% endfor %}

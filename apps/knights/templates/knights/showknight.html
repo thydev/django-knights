@@ -4,7 +4,7 @@
     <div class="container displayreview">
         <h3>Knight Name: {{knight.name}} {{ knight.title }}</h3>
         <h5>Wins: {{knight.winner_matches.count}}</h5>
-        <h5>Losses: {{losses}}</h5>
+        <h5>Losses: {{knight.loser_matches.count}}</h5>
         
         <table class="table table-bordered table-hover">
             <thead>
@@ -18,38 +18,23 @@
             </thead>
             <tbody>
                 
-                {% for match in knight.player1_matches.all %}
+                {% for match in matches %}
                 <tr>
                     <th scope="row">{{ match.id }}</th>
+                    {% if match.winner.id == knight.id %}
                     <td class="text-nowrap">
-                        <a href="/knight/{{match.player2.id}}">{{ match.player2.name }}</a></td>
+                        <a href="/knight/{{match.loser.id}}">{{ match.loser.name }}</a></td>
+                    <td class="text-nowrap">Win</td>
+                    {% endif %}
+                    {% if match.loser.id == knight.id %}
                     <td class="text-nowrap">
-                        {% if match.winner.name == match.player1.name %}
-                        Win
-                        {% else %}  
-                        Loss
-                        {% endif %}
-                    </td>
-                    <td class="text-nowrap cdate">{{ match.created_at|date:"M dS, Y" }}</td>
-                </tr>
-                {% endfor %}
-                {% for match in knight.player2_matches.all %}
-                <tr>
-                    <th scope="row">{{ match.id }}</th>
-                    <td class="text-nowrap">
-                        <a href="/knight/{{match.player1.id}}">{{ match.player1.name }}</a></td>
-                    <td class="text-nowrap">
-                        {% if match.winner.name == match.player2.name %}
-                        Win
-                        {% else %}  
-                        Loss
-                        {% endif %}
-                    </td>
+                        <a href="/knight/{{match.winner.id}}">{{ match.winner.name }}</a></td>
+                    <td class="text-nowrap">loss</td>
+                    {% endif %}
                     <td class="text-nowrap cdate">{{ match.created_at|date:"M dS, Y" }}</td>
                 </tr>
                 {% endfor %}
 
-                
             </tbody>
         </table>
         

@@ -39,20 +39,12 @@ class Knight(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = KnightManager()
 
-    def count_losses(self):
-        wins = self.winner_matches.count()
-        match1 = self.player1_matches.count()
-        match2 = self.player2_matches.count()
-        losses = match1 + match2 - wins
-        
-        return losses
-
     def __repr__(self):
         return "<Knight: {}>".format(self.name)
 
 class Match(models.Model):
-    player1 = models.ForeignKey(Knight, on_delete=models.CASCADE, related_name="player1_matches")
-    player2 = models.ForeignKey(Knight, on_delete=models.CASCADE, related_name="player2_matches")
+
+    loser = models.ForeignKey(Knight, on_delete=models.CASCADE, related_name="loser_matches")
     winner = models.ForeignKey(Knight, on_delete=models.CASCADE, related_name="winner_matches")
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -60,4 +52,4 @@ class Match(models.Model):
     objects = MatchManager()
 
     def __repr__(self):
-        return "<{} vs. {} => {} is winner>".format(self.player1.name, self.player2.name, self.winner.name)
+        return "<{} vs. {}>".format(self.winner.name, self.player2.name, self.winner.name)
