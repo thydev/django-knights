@@ -1,0 +1,59 @@
+{% extends 'knights/base.html' %}
+    {% block content %}
+
+    <div class="container displayreview">
+        <h3>Knight Name: {{knight.name}} {{ knight.title }}</h3>
+        <h5>Wins: {{knight.winner_matches.count}}</h5>
+        <h5>Losses: {{losses}}</h5>
+        
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center text-nowrap">ID #</th>
+                    <th scope="col">Opponent</th>
+                    <th scope="col">Result</th>
+                    <th scope="col">Date</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for match in knight.player1_matches.all %}
+                <tr>
+                    <th scope="row">{{ match.id }}</th>
+                    <td class="text-nowrap">
+                        <a href="/knight/{{match.player2.id}}">{{ match.player2.name }}</a></td>
+                    <td class="text-nowrap">
+                        {% if match.winner.name == match.player1.name %}
+                        Win
+                        {% else %}  
+                        Loss
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap cdate">{{ match.created_at|date:"M dS, Y" }}</td>
+                </tr>
+                {% endfor %}
+                {% for match in knight.player2_matches.all %}
+                <tr>
+                    <th scope="row">{{ match.id }}</th>
+                    <td class="text-nowrap">
+                        <a href="/knight/{{match.player1.id}}">{{ match.player1.name }}</a></td>
+                    <td class="text-nowrap">
+                        {% if match.winner.name == match.player2.name %}
+                        Win
+                        {% else %}  
+                        Loss
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap cdate">{{ match.created_at|date:"M dS, Y" }}</td>
+                </tr>
+                {% endfor %}
+
+                
+            </tbody>
+        </table>
+        
+    </div>
+    
+
+    {% endblock %}

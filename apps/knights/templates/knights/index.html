@@ -1,0 +1,109 @@
+{% extends 'knights/base.html' %}
+    {% block content %}
+
+    <div class="container createknight">
+        <h4>Create Knights</h4>
+        
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form action="/create" method="POST">
+            {% csrf_token %}
+            <div class="form-inline form-group ">
+                <label for="name">Name</label>
+                <input name="name" type="text" id="name" class="form-control mx-sm-3" >
+            </div>
+            <div class="form-inline form-group ">
+                <label for="title">Title</label>
+                <input name="title" type="text" id="title" class="form-control mx-sm-3" >
+            </div>
+<!--             
+            <div class="form-group ">
+                <label for="author">Author</label>
+                <div class="form-group">
+                    <label>Choose from the list:</label>
+                    <select name="author" id="author">
+                        {% for author in authors %}
+                        <option value="{{author.id}}">{{author.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-inline form-group">
+                    <label for="author_new">Or add a new author</label>
+                    <input name="author_new" type="text" id="author_new" class="form-control mx-sm-3" >
+                </div>
+            </div>
+            <div class="form-inline form-group ">
+                <label for="review">Review</label>
+                <textarea name="review" id="review" cols="30" rows="3"></textarea>
+            </div>
+            <div class="form-inline form-group ">
+                <label for="rating">Rating</label>
+                <input name="rating" id="rating" type="number" min="1" max="5" value="1" class="form-control"> stars.
+            </div> -->
+            <input type="submit" value="Create Knight" class="btn btn-primary ">
+        </form>
+    </div>
+    <div class="container matching">
+        <h5>Choose Combatants</h5>
+        <form action="/matching" method="POST">
+            {% csrf_token %}
+            <div class="form-inline form-group">
+
+                <select name="player1" id="player1">
+                    <option disabled selected value> -- Select Player 1 --</option>
+                    {% for player in players %}
+                    <option value="{{player.id}}">{{player.name}}</option>
+                    {% endfor %}
+                </select>
+                vs.
+                <select name="player2" id="player2">
+                    <option disabled selected value> -- Select Player 2 --</option>
+                    {% for player in players %}
+                    <option value="{{player.id}}">{{player.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Fight !!!" class="btn btn-primary ">
+        </form>
+    </div>
+    <div class="container display">
+        <h4>Match Results</h4>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center text-nowrap">ID #</th>
+                    <th scope="col">Winner</th>
+                    <th scope="col">Loser</th>
+                    <th scope="col">Date</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for match in matches %}
+                <tr>
+                    <th scope="row">{{ match.id }}</th>
+                    <td class="text-nowrap">
+                        <a href="/knight/{{match.winner.id}}">{{ match.winner.name }}</a></td>
+                    <td class="text-nowrap">
+                        {% if match.winner.name == match.player1.name %}
+                        <a href="/knight/{{match.player2.id}}">{{ match.player2.name }}</a>
+                        {% else %}  
+                        <a href="/knight/{{match.player1.id}}">{{ match.player1.name }}</a>
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap cdate">{{ match.created_at|date:"M dS, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div><!-- display -->
+ 
+
+    {% endblock %}
